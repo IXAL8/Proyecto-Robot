@@ -1,31 +1,40 @@
-using System;
 using System.Collections;
-using System.Drawing;
 using Robot;
 using UnityEngine;
 using Color = UnityEngine.Color;
+using Random = UnityEngine.Random;
 
-public class Melee : MonoBehaviour
+public class Melee : MonoBehaviour, IAttackable
 {
     [Header("Movimiento")] public float speed = 2f;
     public GameObject pointA;
     public GameObject pointB;
     public float waitTime = 2f;
+    private float stuckTimer = 0f;
+    private float maxStuckTime = 20f;
+    private Vector3 patrolCenter;
+    private float patrolRange;
 
     [Header("Visión")] public float viewDistance = 8f;
     public float viewAngle = 60f; 
     public float headOffset = 1.5f; 
     public LayerMask playerLayer;
-    public LayerMask obstacleMask;
 
     [Header("Combate")]
     public float attackRange = 1.5f;
     public float attackCooldown = 1.5f;
     public float damage = 5;
     private bool isAttacking = false;
+    public int maxHealth = 60;
+    public int currentHealth;
+    private bool isDead = false;
+    
+    [Header("Sistema de Drops")]
+    public GameObject[] drops;
+    public float dropChance = 0.5f;
     
     
-
+    
     [Header("Debug")] public bool showVisionGizmo = true;
 
     private Rigidbody rb;
@@ -38,14 +47,19 @@ public class Melee : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        currentPoint = pointA.transform;
+        currentPoint = pointB.transform;
+        currentHealth = maxHealth;
         
-        Vector3 dir = (currentPoint.position - transform.position).normalized;
-        if (dir.x < 0) Flip();
+        patrolCenter = (pointA.transform.position + pointB.transform.position) / 2f;
+        float distAB = Vector3.Distance(pointA.transform.position, pointB.transform.position);
+        patrolRange = distAB * 0.8f;
+        
+        InitialFlip();
     }
 
     private void Update()
-    {
+    { 
+        if (isDead) return;
        Transform target = DetectPlayer();
        if (target != null)
        {
@@ -54,18 +68,50 @@ public class Melee : MonoBehaviour
        else
        {
            PatrolLogic();
+           CheckStuck();
        }
        
        UpdateAnimations();
+    }
+
+    private void CheckStuck()
+    {
+        if (isAttacking || isDead)
+        {
+            stuckTimer = 0;
+            return;
+        } 
+        
+        float distToCenter = Vector3.Distance(transform.position, patrolCenter);
+        if (distToCenter > patrolRange)
+        {
+            stuckTimer += Time.deltaTime;
+            if (stuckTimer > maxStuckTime)
+            {
+                transform.position = patrolCenter;
+                rb.linearVelocity = Vector3.zero;
+                stuckTimer = 0f;
+                
+                Vector3 dirToPoint = (currentPoint.position - transform.position).normalized;
+                if (dirToPoint.x != 0)
+                {
+                    float  dirSign = Mathf.Sign(dirToPoint.x);
+                    float rightSign = Mathf.Sign(transform.right.x);
+                    if(dirSign != rightSign) Flip();
+                }
+            }
+        }
+        else
+        {
+            stuckTimer = 0;
+        }
+        
     }
 
     private void ChaseAndAttack(Transform target)
     {
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = new Vector3(direction.x * speed, 0, 0);
-        
-        if(direction.x > 0 && transform.localScale.x < 0) Flip();
-        else if(direction.x < 0 && transform.localScale.x > 0) Flip();
         
         float distance = Vector2.Distance(transform.position, target.position);
         if (distance <= attackRange && !isAttacking)
@@ -104,6 +150,16 @@ public class Melee : MonoBehaviour
 
             Vector2 direction = (currentPoint.position - transform.position).normalized;
             rb.linearVelocity = new Vector3(direction.x * speed, 0, 0);
+            
+            if (direction.x != 0)
+            {
+                float dirSign = Mathf.Sign(direction.x);
+                float rightSign = Mathf.Sign(transform.right.x);
+                if (dirSign != rightSign)
+                {
+                    Flip(); // Rota 180° para alinear transform.right con la dirección
+                }
+            }
 
             if (Mathf.Abs(transform.position.x - currentPoint.position.x) < 1f)
             {
@@ -134,18 +190,64 @@ public class Melee : MonoBehaviour
                         {
                             //Debug.Log("¡Jugador detectado! Persiguiendo...");
                             return hit.transform;
-                        }
+                        } 
                         // Si golpea un obstáculo, no detectamos
                     }
+                    
                 }
             }
         }
         return null;
     }
 
+    public void TakeDamage(int damage, bool isMelee)
+    {
+        if (isDead) return;
+        
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        animator.SetTrigger("Die");
+        rb.linearVelocity = Vector3.zero;
+        Collider col = GetComponent<Collider>();
+        if(col != null) col.enabled = false;
+        TryDropItem();
+        Destroy(gameObject, 1.5f);
+    }
+    
+    void TryDropItem()
+    {
+        if (drops != null && drops.Length > 0 && Random.value <= dropChance)
+        {
+            GameObject itemToDrop = drops[Random.Range(0, drops.Length)];
+
+            if (itemToDrop != null)
+            {
+                Instantiate(itemToDrop, transform.position, Quaternion.identity);
+                Debug.Log("Enemigo soltó un item: " + itemToDrop.name);
+            }
+        }
+    }
+
     private void Flip()
     {
         transform.Rotate(0, 180, 0);
+    }
+
+    private void InitialFlip()
+    {
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
     }
     
     void UpdateAnimations()
