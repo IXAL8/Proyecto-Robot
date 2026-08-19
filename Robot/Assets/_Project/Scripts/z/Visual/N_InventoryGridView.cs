@@ -23,7 +23,11 @@ namespace Robot
             _logicGrid = grid;
             _cellBackgrounds = new Image[_logicGrid.Width, _logicGrid.Height];
 
-            _gridPanelLayoutGroup.constraint = GridLayoutGroup.Constraint.Flexible;
+            StretchToFillParent(_gridPanelRectTransform);
+            StretchToFillParent(_itemsContainerRectTransform);
+
+            _gridPanelLayoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            _gridPanelLayoutGroup.constraintCount = grid.Width;
 
             for (int y = 0; y < _logicGrid.Height; y++)
             {
@@ -71,6 +75,14 @@ namespace Robot
             int x = Mathf.FloorToInt(localPointInItemsContainer.x / cellSize);
             int y = Mathf.FloorToInt(-localPointInItemsContainer.y / cellSize);
             return new Vector2Int(x, y);
+        }
+
+        public void StretchToFillParent(RectTransform rt)
+        {
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Robot
         [SerializeField] private CanvasGroup _titleEndgameUI;
         [SerializeField] private CanvasGroup _subtitleEndgameUI;
 
+        public GameObject ChipUI => _chipUIInventory;
+
         private void Start()
         {
             InputManager.Source.OpenChipsInventory += OpenChipInventory;
@@ -99,7 +101,7 @@ namespace Robot
         private void OpenChipInventory()
         {
             _chipUIInventory.SetActive(true);
-            _chipUIInventory.GetComponentInChildren<ChipDisplay>().RefreshChipDescription();
+            //_chipUIInventory.GetComponentInChildren<ChipDisplay>().RefreshChipDescription();
             HideGUI();
         }
 

@@ -9,6 +9,10 @@ namespace Robot
         public string chipName;
         public Sprite icon;
 
+        [Header("Rotation")]
+        public bool canRotate = true;
+        public Sprite[] rotationSprites = new Sprite[4];
+
         [Header("Shape (Does not modify, use the grid of below)")]
         public int shapeWidth = 3;
         public int shapeHeight = 3;
@@ -38,6 +42,12 @@ namespace Robot
             shapeWidth = newWidth;
             shapeHeight = newHeight;
             shapeFlat = newFlat;
+        }
+
+        public Sprite GetSpriteForRotation(int rotationStep)
+        {
+            int index = ((rotationStep % 4) + 4) % 4;
+            return rotationSprites[index] != null ? rotationSprites[index] : icon;
         }
     }
 }

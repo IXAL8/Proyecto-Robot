@@ -18,9 +18,8 @@ namespace Robot
             cells = new N_ChipsClass[width, height];
         }
 
-        public bool CanPlaceItem(N_ChipsClass item, Vector2Int position)
+        public bool CanPlaceItem(bool[,] shape, Vector2Int position)
         {
-            bool[,] shape = item.Shape;
             int shapeWidth = shape.GetLength(0);
             int shapeHeight = shape.GetLength(1);
 
@@ -36,18 +35,68 @@ namespace Robot
                     if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height)
                         return false;
 
-                    if (cells[gridX, gridY] != null && cells[gridX, gridY] != item)
+                    if (cells[gridX, gridY] != null)
                         return false;
                 }
             }
             return true;
         }
-        public bool PlaceItem(N_ChipsClass item, Vector2Int position)
+
+        public bool CanPlaceItem(N_ChipsClass chip, Vector2Int position)
         {
-            if (!CanPlaceItem(item, position))
+            bool[,] shape = chip.Shape;
+            int shapeWidth = shape.GetLength(0);
+            int shapeHeight = shape.GetLength(1);
+
+            for (int x = 0; x < shapeWidth; x++)
+            {
+                for (int y = 0; y < shapeHeight; y++)
+                {
+                    if (!shape[x, y]) continue;
+
+                    int gridX = position.x + x;
+                    int gridY = position.y + y;
+
+                    if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height)
+                        return false;
+
+                    if (cells[gridX, gridY] != null && cells[gridX, gridY] != chip)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public bool CanPlaceItem(N_ChipsClass chip, bool[,] shape, Vector2Int position)
+        {
+            int shapeWidth = shape.GetLength(0);
+            int shapeHeight = shape.GetLength(1);
+
+            for (int x = 0; x < shapeWidth; x++)
+            {
+                for (int y = 0; y < shapeHeight; y++)
+                {
+                    if (!shape[x, y]) continue;
+
+                    int gridX = position.x + x;
+                    int gridY = position.y + y;
+
+                    if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height)
+                        return false;
+
+                    if (cells[gridX, gridY] != null && cells[gridX, gridY] != chip)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public bool PlaceChip(N_ChipsClass chip, Vector2Int position)
+        {
+            if (!CanPlaceItem(chip, position))
                 return false;
 
-            bool[,] shape = item.Shape;
+            bool[,] shape = chip.Shape;
             int shapeWidth = shape.GetLength(0);
             int shapeHeight = shape.GetLength(1);
 
@@ -56,14 +105,15 @@ namespace Robot
                 for (int y = 0; y < shapeHeight; y++)
                 {
                     if (shape[x, y])
-                        cells[position.x + x, position.y + y] = item;
+                        cells[position.x + x, position.y + y] = chip;
                 }
             }
 
-            item.GridPosition = position;
+            chip.GridPosition = position;
             return true;
         }
-        public bool RemoveItem(N_ChipsClass item)
+
+        public bool RemoveChip(N_ChipsClass chip)
         {
             bool removed = false;
 
@@ -71,7 +121,7 @@ namespace Robot
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (cells[x, y] == item)
+                    if (cells[x, y] == chip)
                     {
                         cells[x, y] = null;
                         removed = true;
@@ -82,8 +132,8 @@ namespace Robot
             return removed;
         }
 
-        
-        public N_ChipsClass GetItemAt(Vector2Int position)
+
+        public N_ChipsClass GetChipAt(Vector2Int position)
         {
             if (position.x < 0 || position.x >= width || position.y < 0 || position.y >= height)
                 return null;
@@ -91,19 +141,19 @@ namespace Robot
             return cells[position.x, position.y];
         }
 
-        public bool MoveItem(N_ChipsClass item, Vector2Int newPosition)
+        public bool MoveChip(N_ChipsClass chip, Vector2Int newPosition)
         {
-            Vector2Int oldPosition = item.GridPosition;
+            Vector2Int oldPosition = chip.GridPosition;
 
-            RemoveItem(item);
+            RemoveChip(chip);
 
-            if (CanPlaceItem(item, newPosition))
+            if (CanPlaceItem(chip, newPosition))
             {
-                PlaceItem(item, newPosition);
+                PlaceChip(chip, newPosition);
                 return true;
             }
 
-            PlaceItem(item, oldPosition);
+            PlaceChip(chip, oldPosition);
             return false;
         }
     }

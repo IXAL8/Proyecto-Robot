@@ -37,7 +37,7 @@ namespace Robot
         {
             N_ChipsClass item = new N_ChipsClass(data);
 
-            if (!grid.PlaceItem(item, position))
+            if (!grid.PlaceChip(item, position))
             {
                 Debug.LogWarning($"No se pudo colocar {data.name} en {position}");
                 return;
@@ -45,7 +45,7 @@ namespace Robot
 
             GameObject itemGO = Instantiate(itemPrefab);
             N_InventoryItemView itemView = itemGO.GetComponent<N_InventoryItemView>();
-            itemView.Initialize(item, grid, gridView);
+            //itemView.Initialize(item, grid, gridView);
         }
     }
 }
