@@ -70,15 +70,15 @@ namespace Robot
         public void AssignChipData(ChipData chip)
         {
             _chipData = chip;
-            _currentRotationStep = _chipData.RotationSteps;
-            _shapeRotation = new List<Vector2Int>(_chipData.Shape);
+            //_currentRotationStep = _chipData.RotationSteps;
+            //_shapeRotation = new List<Vector2Int>(_chipData.Shape);
         }
 
         public void InitializeChip()
         {
             _sizeDeltaChip = gameObject.GetComponent<RectTransform>().sizeDelta;
-            gameObject.GetComponent<Image>().sprite = _chipData.ChipSprite;
-            _shapeRotation = new List<Vector2Int>(_chipData.Shape);
+            //gameObject.GetComponent<Image>().sprite = _chipData.ChipSprite;
+            //_shapeRotation = new List<Vector2Int>(_chipData.Shape);
             _coordinatesOccupiedOnGrid = new List<Vector2Int>();
             _lastShapeRotation = new List<Vector2Int>();
         }

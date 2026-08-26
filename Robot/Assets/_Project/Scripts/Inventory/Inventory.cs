@@ -88,7 +88,7 @@ namespace Robot
         {
             ScriptablesDataBase.Source.AddToDatabase(newItem);
 
-            if (newItem is ChipData) ChipInventoryManager.Source.AddToAvailableChips((ChipData)newItem);
+            //if (newItem is ChipData) ChipInventoryManager.Source.AddToAvailableChips((ChipData)newItem);
 
             if (IsItemInInventory(newItem))
             {

@@ -194,7 +194,7 @@ namespace Robot
 
         public void ActiveChipEffects(Chip chip)
         {
-            if (chip.ChipData.BonusStatsChip.ActiveHealthBar)
+            /*if (chip.ChipData.BonusStatsChip.ActiveHealthBar)
             {
                 _healthBar.GetComponent<CanvasGroup>().alpha = 1;
                 OnHealthBarActivation?.Invoke(true);
@@ -225,12 +225,12 @@ namespace Robot
             if (chip.ChipData.BonusStatsChip.ActiveDash)
             {
                 OnDashChipActivation?.Invoke(true);
-            }
+            }*/
         }
 
         public void DeactiveChipEffects(Chip chip)
         {
-            if (chip.ChipData.BonusStatsChip.ActiveHealthBar)
+            /*if (chip.ChipData.BonusStatsChip.ActiveHealthBar)
             {
                 _healthBar.GetComponent<CanvasGroup>().alpha = 0;
                 OnHealthBarActivation?.Invoke(false);
@@ -255,7 +255,7 @@ namespace Robot
             if (chip.ChipData.BonusStatsChip.ActiveDash)
             {
                 OnDashChipActivation?.Invoke(false);
-            }
+            }*/
         }
 
         private void RefreshBaseStats()
