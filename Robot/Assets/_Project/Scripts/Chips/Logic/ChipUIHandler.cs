@@ -128,11 +128,11 @@ namespace Robot
 
         private void RotateChip()
         {
-            if (_isDragging && _chip.ChipData.IsRotable)
+            /*if (_isDragging && _chip.ChipData.IsRotable)
             {
                 ChipInventoryManager.Source.RotateChip(_chipPivotRectTransform, _chip);
                 ChipInventoryUIManager.Source.ApplyVisualRotation(_chipPivotRectTransform, _chip.CurrentRotationStep);
-            }
+            }*/
         }
 
         private void DeleteChipPlaced()

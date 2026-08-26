@@ -37,8 +37,8 @@ namespace Robot
 
             if (chip != null)
             {
-                _chipName.text = chip.ChipData.ChipName;
-                _chipDescription.text = chip.ChipData.ChipEffectDescription;
+                //_chipName.text = chip.ChipData.ChipName;
+                //_chipDescription.text = chip.ChipData.ChipEffectDescription;
             }
             else
             {

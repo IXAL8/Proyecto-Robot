@@ -80,8 +80,8 @@ namespace Robot
 
         public void ResizeUIOnHandle(RectTransform chipRectTransform, ChipData chipData)
         {
-            chipRectTransform.anchoredPosition = chipData.UIposition;
-            chipRectTransform.sizeDelta = chipData.UIsizeDelta;
+            //chipRectTransform.anchoredPosition = chipData.UIposition;
+            //chipRectTransform.sizeDelta = chipData.UIsizeDelta;
         }
 
         public void ApplyVisualRotation(RectTransform chipRectTransform, int rotationStep)

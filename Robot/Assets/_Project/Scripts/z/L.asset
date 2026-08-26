@@ -12,8 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfa40bd8b60dc44cb12da2045c40b46, type: 3}
   m_Name: L
   m_EditorClassIdentifier: 
-  chipName: L
+  Name: Soy una L
   icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  Description: Es una L
+  canRotate: 1
+  rotationSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   shapeWidth: 3
   shapeHeight: 3
   shapeFlat: 010000010000010100

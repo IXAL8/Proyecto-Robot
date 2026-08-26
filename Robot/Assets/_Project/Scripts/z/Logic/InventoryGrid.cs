@@ -1,21 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Robot
 {
-    public class N_InventoryGrid
+    public class InventoryGrid
     {
         public int width, height;
-        public N_ChipsClass[,] cells;
+        public ChipsClass[,] cells;
 
         public int Width => width;
         public int Height => height;
 
-        public N_InventoryGrid(int width, int height)
+        public InventoryGrid(int width, int height)
         {
             this.width = width;
             this.height = height;
 
-            cells = new N_ChipsClass[width, height];
+            cells = new ChipsClass[width, height];
         }
 
         public bool CanPlaceItem(bool[,] shape, Vector2Int position)
@@ -42,7 +43,7 @@ namespace Robot
             return true;
         }
 
-        public bool CanPlaceItem(N_ChipsClass chip, Vector2Int position)
+        public bool CanPlaceItem(ChipsClass chip, Vector2Int position)
         {
             bool[,] shape = chip.Shape;
             int shapeWidth = shape.GetLength(0);
@@ -67,7 +68,7 @@ namespace Robot
             return true;
         }
 
-        public bool CanPlaceItem(N_ChipsClass chip, bool[,] shape, Vector2Int position)
+        public bool CanPlaceItem(ChipsClass chip, bool[,] shape, Vector2Int position)
         {
             int shapeWidth = shape.GetLength(0);
             int shapeHeight = shape.GetLength(1);
@@ -91,7 +92,7 @@ namespace Robot
             return true;
         }
 
-        public bool PlaceChip(N_ChipsClass chip, Vector2Int position)
+        public bool PlaceChip(ChipsClass chip, Vector2Int position)
         {
             if (!CanPlaceItem(chip, position))
                 return false;
@@ -113,7 +114,7 @@ namespace Robot
             return true;
         }
 
-        public bool RemoveChip(N_ChipsClass chip)
+        public bool RemoveChip(ChipsClass chip)
         {
             bool removed = false;
 
@@ -133,7 +134,7 @@ namespace Robot
         }
 
 
-        public N_ChipsClass GetChipAt(Vector2Int position)
+        public ChipsClass GetChipAt(Vector2Int position)
         {
             if (position.x < 0 || position.x >= width || position.y < 0 || position.y >= height)
                 return null;
@@ -141,7 +142,7 @@ namespace Robot
             return cells[position.x, position.y];
         }
 
-        public bool MoveChip(N_ChipsClass chip, Vector2Int newPosition)
+        public bool MoveChip(ChipsClass chip, Vector2Int newPosition)
         {
             Vector2Int oldPosition = chip.GridPosition;
 
@@ -155,6 +156,58 @@ namespace Robot
 
             PlaceChip(chip, oldPosition);
             return false;
+        }
+
+        public void PrintOccupiedCellsDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine($"=== Estado del grid ({width}x{height}) ===");
+
+            // Asigna una letra única a cada chip distinto encontrado en el grid
+            Dictionary<ChipsClass, char> chipSymbols = new Dictionary<ChipsClass, char>();
+            char nextSymbol = 'A';
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    ChipsClass chip = cells[x, y];
+                    if (chip != null && !chipSymbols.ContainsKey(chip))
+                    {
+                        chipSymbols[chip] = nextSymbol;
+                        nextSymbol++;
+                    }
+                }
+            }
+
+            // Dibuja la grilla usando esas letras
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    ChipsClass chip = cells[x, y];
+                    sb.Append(chip != null ? chipSymbols[chip].ToString() : ".");
+                }
+                sb.AppendLine();
+            }
+
+            // Leyenda: qué letra corresponde a qué ítem y en qué posición de origen está
+            if (chipSymbols.Count > 0)
+            {
+                sb.AppendLine("\n--- Leyenda ---");
+                foreach (var kvp in chipSymbols)
+                {
+                    ChipsClass chip = kvp.Key;
+                    char symbol = kvp.Value;
+                    sb.AppendLine($"{symbol} = {chip.Data.Name} (origen: {chip.GridPosition})");
+                }
+            }
+            else
+            {
+                sb.AppendLine("(grid vacío)");
+            }
+
+            Debug.Log(sb.ToString());
         }
     }
 }

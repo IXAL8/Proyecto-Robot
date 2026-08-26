@@ -11,7 +11,7 @@ namespace Robot
         [SerializeField] private int _gridRows, _gridColumns;
         [Header("ChipDisplaySpawn")]
         [SerializeField] private GameObject _currentChipOnDisplay;
-        [SerializeField] private GameObject _chipPrefab;
+        //[SerializeField] private GameObject _chipPrefab;
         [SerializeField] private List<ChipData> _availableChips;
 
 
@@ -48,7 +48,7 @@ namespace Robot
         private void GetChipsFromInventory()
         {
             _activeChips.Clear();
-            _availableChips = Inventory.Source.GetItemsOfType<ChipData>();
+            //_availableChips = Inventory.Source.GetItemsOfType<ChipData>();
             if (_availableChips.Count == 0)
             {
                 Debug.Log("No Chips In Inventory");
@@ -138,7 +138,7 @@ namespace Robot
             }
             else
             {
-                _currentChipOnDisplay = Instantiate(_chipPrefab, ChipInventoryUIManager.Source.DisplayRectTransform);
+                //_currentChipOnDisplay = Instantiate(_chipPrefab, ChipInventoryUIManager.Source.DisplayRectTransform);
                 _listIndex = 0;
                 _currentChipOnDisplay.GetComponentInChildren<Chip>().AssignChipData(_availableChips[_listIndex]);
                 OnChipSpawned?.Invoke();
@@ -184,7 +184,7 @@ namespace Robot
 
         private void ApplyChipEffects(Chip chip)
         {
-            PlayerStatsManager.Source.AddModifierToPlayer(chip.ChipData.BonusStatsChip);
+            //PlayerStatsManager.Source.AddModifierToPlayer(chip.ChipData.BonusStatsChip);
             ChipInventoryUIManager.Source.RefreshPlayerStats();
             OnChipPlaced?.Invoke(chip);
             chip.SetPlaced(true);
@@ -192,7 +192,7 @@ namespace Robot
 
         private void RemoveChipEffects(Chip chip)
         {
-            PlayerStatsManager.Source.SubstractModifierToPlayer(chip.ChipData.BonusStatsChip);
+            //PlayerStatsManager.Source.SubstractModifierToPlayer(chip.ChipData.BonusStatsChip);
             ChipInventoryUIManager.Source.RefreshPlayerStats();
             OnChipRemoved?.Invoke(chip);
         }

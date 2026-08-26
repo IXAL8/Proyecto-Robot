@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Robot
 {
-    public class N_ChipManager : Singleton<IChipSource>, IChipSource
+    public class ChipManager : Singleton<IChipSource>, IChipSource
     {
         [Header("Grid Configuration")]
         [SerializeField] private int _width;
@@ -12,17 +12,17 @@ namespace Robot
 
         [Header("Chips available")]
         [SerializeField] private GameObject _chipPrefab;
-        [SerializeField] private List<N_ChipsData> _chipsAvailables = new();
+        [SerializeField] private List<ChipData> _chipsAvailables = new();
 
         [Header("References")]
-        [SerializeField] private N_InventoryGridView _gridUI;
-        [SerializeField] private N_PanelVisualizer _panelVisualizer;
-        private N_InventoryGrid _logicGrid;
+        [SerializeField] private InventoryGridView _gridUI;
+        [SerializeField] private PanelVisualizer _panelVisualizer;
+        private InventoryGrid _logicGrid;
 
         public GameObject ChipPrefab => _chipPrefab;
-        public List<N_ChipsData> ChipsAvailables => _chipsAvailables;
-        public N_InventoryGridView GridUI => _gridUI;
-        public N_InventoryGrid LogicGrid => _logicGrid;
+        public List<ChipData> ChipsAvailables => _chipsAvailables;
+        public InventoryGridView GridUI => _gridUI;
+        public InventoryGrid LogicGrid => _logicGrid;
         public float CellSize => _gridUI.CellSize;
         public RectTransform ItemsContainer => _gridUI.ItemsContainer;
         public RectTransform Visualizer => _panelVisualizer.VisualizerRectTransform;
@@ -36,7 +36,7 @@ namespace Robot
 
         private void InitializeGrid()
         {
-            _logicGrid = new N_InventoryGrid(_width, _height);
+            _logicGrid = new InventoryGrid(_width, _height);
             _gridUI.Initialize(_logicGrid);
         }
 
@@ -69,35 +69,48 @@ namespace Robot
             _gridUI.ClearHighlights();
         }
 
-        public N_ChipsClass PlaceItem(N_ChipsData data, bool[,] shape, Vector2Int position, N_InventoryItemView view)
+        public ChipsClass PlaceItem(ChipData data, bool[,] shape, Vector2Int position, InventoryChipView view)
         {
-            N_ChipsClass chip = new N_ChipsClass(data, shape);
+            ChipsClass chip = new ChipsClass(data, shape);
             _logicGrid.PlaceChip(chip, position);
             view.SetPlacedState(chip.GridPosition);
             _panelVisualizer.OnChipPlaced();
             return chip;
         }
 
-        public void BeginMove(N_ChipsClass chip)
+        public void BeginMove(ChipsClass chip)
         {
             _logicGrid.RemoveChip(chip);
         }
 
-        public bool CanMoveItem(N_ChipsClass chip, bool[,] shape, Vector2Int position)
+        public bool CanMoveItem(ChipsClass chip, bool[,] shape, Vector2Int position)
         {
-            return _logicGrid.CanPlaceItem(chip, position);
+            return _logicGrid.CanPlaceItem(chip, shape, position);
         }
 
-        public void ConfirmMove(N_ChipsClass chip, Vector2Int position, N_InventoryItemView view)
+        public void ConfirmMove(ChipsClass chip, Vector2Int position, InventoryChipView view)
         {
             _logicGrid.PlaceChip(chip, position);
             view.SetPlacedState(chip.GridPosition);
         }
 
-        public void CancelMove(N_ChipsClass chip, Vector2Int originalPosition)
+        public void CancelMove(ChipsClass chip, Vector2Int originalPosition)
         {
             _logicGrid.PlaceChip(chip, originalPosition);
         }
 
+        public void ReturnChipDataToList(ChipsClass chip, ChipData chipData, InventoryChipView view)
+        {
+            _logicGrid.RemoveChip(chip);
+            _chipsAvailables.Add(chipData);
+            Destroy(view.gameObject);
+            _panelVisualizer.OnChipRemoved();
+        }
+
+        [ContextMenu("Debug: Mostrar celdas ocupadas")]
+        private void DebugPrintGrid()
+        {
+            _logicGrid.PrintOccupiedCellsDetailed();
+        }
     }
 }

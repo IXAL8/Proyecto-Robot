@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace Robot
 {
-    public class N_ChipsClass
+    public class ChipsClass
     {
         public bool[,] Shape { get; set; }
         public Vector2Int GridPosition { get; set; }
-        public N_ChipsData Data { get; set; } 
+        public ChipData Data { get; set; } 
 
-        public N_ChipsClass(N_ChipsData data, bool[,] overrideShape = null)
+        public ChipsClass(ChipData data, bool[,] overrideShape = null)
         {
             Data = data;
             Shape = overrideShape ?? data.GetShape2D();

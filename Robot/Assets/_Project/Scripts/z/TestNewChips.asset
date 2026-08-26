@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfa40bd8b60dc44cb12da2045c40b46, type: 3}
   m_Name: TestNewChips
   m_EditorClassIdentifier: 
-  chipName: Pistola
-  icon: {fileID: 21300000, guid: aa67f7903d2fb7a44af3d0e6fdc4086d, type: 3}
-  shapeWidth: 2
+  Name: Dos bloques
+  icon: {fileID: 21300000, guid: ce60e60bf1675e249826806c2aa7daee, type: 3}
+  Description: Chip que es un 3x1, que cagado
+  canRotate: 1
+  rotationSprites:
+  - {fileID: 21300000, guid: ce60e60bf1675e249826806c2aa7daee, type: 3}
+  - {fileID: 21300000, guid: 83296a59df9b98e459578168e78062fb, type: 3}
+  shapeWidth: 3
   shapeHeight: 1
-  shapeFlat: 0101
+  shapeFlat: 010101

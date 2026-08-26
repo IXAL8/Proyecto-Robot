@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Robot
 {
-    public class N_InventoryGridView : MonoBehaviour
+    public class InventoryGridView : MonoBehaviour
     {
         [Header("Settings")]
         [SerializeField] private RectTransform _gridPanelRectTransform;
@@ -11,14 +11,14 @@ namespace Robot
         [SerializeField] private GridLayoutGroup _gridPanelLayoutGroup;
         [SerializeField] private GameObject _cellPrefab;
 
-        private N_InventoryGrid _logicGrid;
+        private InventoryGrid _logicGrid;
         private Image[,] _cellBackgrounds;
 
         public float CellSize => _gridPanelLayoutGroup.cellSize.x + _gridPanelLayoutGroup.spacing.x;
         public RectTransform RectTransform => _gridPanelRectTransform;
         public RectTransform ItemsContainer => _itemsContainerRectTransform;
 
-        public void Initialize(N_InventoryGrid grid)
+        public void Initialize(InventoryGrid grid)
         {
             _logicGrid = grid;
             _cellBackgrounds = new Image[_logicGrid.Width, _logicGrid.Height];

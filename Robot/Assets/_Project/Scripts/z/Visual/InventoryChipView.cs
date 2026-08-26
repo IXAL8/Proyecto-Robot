@@ -8,7 +8,7 @@ namespace Robot
     [RequireComponent(typeof(RectTransform))]
     public class InventoryChipView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [SerializeField] private Image iconImage;
+        [SerializeField] private Image _iconImage;
 
         private ChipData _chipData;
         private ChipsClass _chip;
@@ -17,7 +17,7 @@ namespace Robot
         private bool _isDragging, _isPlacedInGrid, _isOverGrid, _currentPlacementValid;
         private Vector2Int _currentGridPos, _dragOrigin;
         private bool[,] _currentShape;
-        private int _rotationStep;
+        private int _rotationStep, _lastRotationStep;
 
         private void OnEnable()
         {
@@ -36,7 +36,9 @@ namespace Robot
             _chipData = data;
 
             _rectTransform = GetComponent<RectTransform>();
-            iconImage.sprite = data.icon;
+            _iconImage.sprite = data.icon;
+            _iconImage.alphaHitTestMinimumThreshold = 0.9f;
+
             _isPlacedInGrid = false;
             _currentShape = data.GetShape2D();
 
@@ -49,13 +51,13 @@ namespace Robot
             if(!_chipData.canRotate) return;
 
             _currentShape = ChipsClass.RotateShape(_currentShape);
-            _rotationStep = (_rotationStep + 1) % 4;
+            _rotationStep = (_rotationStep + 1) % _chipData.rotationSprites.Length;
 
             int w = _currentShape.GetLength(0);
             int h = _currentShape.GetLength(1);
             _rectTransform.sizeDelta = new Vector2(w * ChipManager.Source.CellSize, h * ChipManager.Source.CellSize);
 
-            iconImage.sprite = _chipData.GetSpriteForRotation(_rotationStep);
+            _iconImage.sprite = _chipData.GetSpriteForRotation(_rotationStep);
 
             if (_isOverGrid)
             {
@@ -138,11 +140,13 @@ namespace Robot
             {
                 if (_isOverGrid && _currentPlacementValid)
                 {
+                    _lastRotationStep = _rotationStep;
                     _chip.SetShape(_currentShape);
                     ChipManager.Source.ConfirmMove(_chip, _currentGridPos, this);
                 }
                 else
                 {
+                    _rotationStep = _lastRotationStep;
                     ChipManager.Source.CancelMove(_chip, _dragOrigin);
                 }
 
@@ -153,6 +157,7 @@ namespace Robot
                 if (_isOverGrid && _currentPlacementValid)
                 {
                     _chip = ChipManager.Source.PlaceItem(_chipData, _currentShape, _currentGridPos, this);
+                    _lastRotationStep = _rotationStep;
                 }
                 else
                 {
@@ -170,6 +175,7 @@ namespace Robot
             _rectTransform.anchoredPosition = new Vector2( gridPosition.x * ChipManager.Source.CellSize,-gridPosition.y * ChipManager.Source.CellSize);
 
             _isPlacedInGrid = true;
+            _iconImage.sprite = _chipData.GetSpriteForRotation(_rotationStep);
         }
 
         private void OnDeleteButtonPressed()

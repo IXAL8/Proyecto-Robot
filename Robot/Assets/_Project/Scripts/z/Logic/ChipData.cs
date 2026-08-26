@@ -2,12 +2,14 @@ using UnityEngine;
 
 namespace Robot
 {
-    [CreateAssetMenu(fileName = "TestNewChips", menuName = "Inventory/Item/TestChips")]
-    public class N_ChipsData : ScriptableObject
+    [CreateAssetMenu(fileName = "Chips", menuName = "Inventory/Item/Chip")]
+    public class ChipData : ScriptableObject
     {
         [Header("Chip Data")]
-        public string chipName;
+        public string Name;
         public Sprite icon;
+        [TextArea(1, 2)]
+        public string Description;
 
         [Header("Rotation")]
         public bool canRotate = true;

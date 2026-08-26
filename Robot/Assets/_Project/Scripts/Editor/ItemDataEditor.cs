@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Robot
 {
-    [CustomEditor(typeof(N_ChipsData))]
+    [CustomEditor(typeof(ChipData))]
     public class ItemDataEditor : Editor
     {
         private const float CellButtonSize = 25f;
 
         public override void OnInspectorGUI()
         {
-            N_ChipsData data = (N_ChipsData)target;
+            ChipData data = (ChipData)target;
 
             DrawDefaultInspector();
 
@@ -92,7 +92,7 @@ namespace Robot
             else
             {
                 bool[,] baseShape = data.GetShape2D();
-                int uniqueRotations = N_ChipsClass.CountUniqueRotations(baseShape);
+                int uniqueRotations = ChipsClass.CountUniqueRotations(baseShape);
 
                 string message = uniqueRotations switch
                 {
