@@ -74,6 +74,10 @@ namespace Robot
             ChipsClass chip = new ChipsClass(data, shape);
             _logicGrid.PlaceChip(chip, position);
             view.SetPlacedState(chip.GridPosition);
+
+            foreach (ChipEffect effect in data.Effects)
+                effect?.OnPlaced(chip);
+
             _panelVisualizer.OnChipPlaced();
             return chip;
         }
@@ -103,6 +107,10 @@ namespace Robot
         {
             _logicGrid.RemoveChip(chip);
             _chipsAvailables.Add(chipData);
+
+            foreach (ChipEffect effect in chipData.Effects)
+                effect?.OnRemoved(chip);
+
             Destroy(view.gameObject);
             _panelVisualizer.OnChipRemoved();
         }

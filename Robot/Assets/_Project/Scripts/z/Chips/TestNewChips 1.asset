@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: TestNewChips 1
   m_EditorClassIdentifier: 
   Name: Chip ataque distancia
-  icon: {fileID: 21300000, guid: 01cf25f3e5ae53644b5156c66f1b1ed3, type: 3}
+  Icon: {fileID: 21300000, guid: 01cf25f3e5ae53644b5156c66f1b1ed3, type: 3}
   Description: Ataca a la distancia como si su vida dependiera de eso jaja
-  canRotate: 1
-  rotationSprites:
+  CanRotate: 1
+  RotationSprites:
   - {fileID: 21300000, guid: 01cf25f3e5ae53644b5156c66f1b1ed3, type: 3}
   - {fileID: 21300000, guid: 3221b3dddda643947998a1696255edb1, type: 3}
   - {fileID: 21300000, guid: cb25841626758b140ab186393f3d17be, type: 3}
   - {fileID: 21300000, guid: cf3bd5287c495ff428495ff89af32741, type: 3}
-  shapeWidth: 5
-  shapeHeight: 5
-  shapeFlat: 01010101010101010000010101000001000001000100000001
+  ShapeWidth: 5
+  ShapeHeight: 5
+  ShapeFlat: 01010101010101010000010101000001000001000100000001
+  Effects:
+  - {fileID: 11400000, guid: aee05f5986dd72e4b90353b69e3920ee, type: 2}

@@ -19,8 +19,8 @@ namespace Robot
 
             // --- Controles de tamaño ---
             EditorGUI.BeginChangeCheck();
-            int newWidth = EditorGUILayout.IntField("Ancho", data.shapeWidth);
-            int newHeight = EditorGUILayout.IntField("Alto", data.shapeHeight);
+            int newWidth = EditorGUILayout.IntField("Ancho", data.ShapeWidth);
+            int newHeight = EditorGUILayout.IntField("Alto", data.ShapeHeight);
 
             newWidth = Mathf.Clamp(newWidth, 1, 10);
             newHeight = Mathf.Clamp(newHeight, 1, 10);
@@ -35,14 +35,14 @@ namespace Robot
             EditorGUILayout.Space(5);
 
             // --- Grid pintable ---
-            for (int y = 0; y < data.shapeHeight; y++)
+            for (int y = 0; y < data.ShapeHeight; y++)
             {
                 EditorGUILayout.BeginHorizontal();
 
-                for (int x = 0; x < data.shapeWidth; x++)
+                for (int x = 0; x < data.ShapeWidth; x++)
                 {
-                    int index = y * data.shapeWidth + x;
-                    bool current = data.shapeFlat[index];
+                    int index = y * data.ShapeWidth + x;
+                    bool current = data.ShapeFlat[index];
 
                     bool newValue = GUILayout.Toggle(
                         current, "", GUI.skin.button,
@@ -52,7 +52,7 @@ namespace Robot
                     if (newValue != current)
                     {
                         Undo.RecordObject(data, "Paint Chip Shape");
-                        data.shapeFlat[index] = newValue;
+                        data.ShapeFlat[index] = newValue;
                         EditorUtility.SetDirty(data);
                     }
                 }
@@ -66,16 +66,16 @@ namespace Robot
             if (GUILayout.Button("Limpiar todo"))
             {
                 Undo.RecordObject(data, "Clear Chip Shape");
-                for (int i = 0; i < data.shapeFlat.Length; i++)
-                    data.shapeFlat[i] = false;
+                for (int i = 0; i < data.ShapeFlat.Length; i++)
+                    data.ShapeFlat[i] = false;
                 EditorUtility.SetDirty(data);
             }
 
             if (GUILayout.Button("Rellenar todo"))
             {
                 Undo.RecordObject(data, "Fill Chip Shape");
-                for (int i = 0; i < data.shapeFlat.Length; i++)
-                    data.shapeFlat[i] = true;
+                for (int i = 0; i < data.ShapeFlat.Length; i++)
+                    data.ShapeFlat[i] = true;
                 EditorUtility.SetDirty(data);
             }
 
@@ -85,7 +85,7 @@ namespace Robot
             EditorGUILayout.Space(15);
             EditorGUILayout.LabelField("Análisis de rotación", EditorStyles.boldLabel);
 
-            if (!data.canRotate)
+            if (!data.CanRotate)
             {
                 EditorGUILayout.HelpBox("Este ítem tiene 'canRotate' desactivado — no necesita sprites de rotación.", MessageType.None);
             }

@@ -101,7 +101,6 @@ namespace Robot
         private void OpenChipInventory()
         {
             _chipUIInventory.SetActive(true);
-            //_chipUIInventory.GetComponentInChildren<ChipDisplay>().RefreshChipDescription();
             HideGUI();
         }
 

@@ -36,7 +36,7 @@ namespace Robot
             _chipData = data;
 
             _rectTransform = GetComponent<RectTransform>();
-            _iconImage.sprite = data.icon;
+            _iconImage.sprite = data.Icon;
             _iconImage.alphaHitTestMinimumThreshold = 0.9f;
 
             _isPlacedInGrid = false;
@@ -48,10 +48,10 @@ namespace Robot
         private void RotateCurrentShape()
         {
             if (!_isDragging) return;
-            if(!_chipData.canRotate) return;
+            if(!_chipData.CanRotate) return;
 
             _currentShape = ChipsClass.RotateShape(_currentShape);
-            _rotationStep = (_rotationStep + 1) % _chipData.rotationSprites.Length;
+            _rotationStep = (_rotationStep + 1) % _chipData.RotationSprites.Length;
 
             int w = _currentShape.GetLength(0);
             int h = _currentShape.GetLength(1);

@@ -11,6 +11,8 @@ public class CheckpointSystem : MonoBehaviour
     private Vector3 defaultRespawnPosition;
     private List<EnemyState> enemyStates = new List<EnemyState>();
 
+    public event Action OnPlayerSpawn;
+
     private void Awake()
     {
         if (Instance == null)
@@ -45,8 +47,8 @@ public class CheckpointSystem : MonoBehaviour
         }
         
         player.transform.position = respawnPosition;
-        
-        PlayerStatsManager.Source.Respawn();
+
+        OnPlayerSpawn?.Invoke();
 
         RespawnEnemies();
     }
